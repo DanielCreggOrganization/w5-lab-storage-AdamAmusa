@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { Storage } from '@ionic/storage-angular';
 import { IonicModule } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
+import { StorageService } from '../services/storage.service';
 
 @Component({
   selector: 'app-home',
@@ -16,9 +17,37 @@ export class HomePage {
   value: string = '';
   output: string = '';
 
-  constructor(private storage: Storage) {
+  constructor(private storage: Storage, private storageService: StorageService) {
     storage.create();
+
+    
+
   }
+    async remove(){
+      await this.storageService.remove(this.key);
+      this.output = "Item removed";
+    }
+
+    async clear(){
+      await this.storageService.clear();
+      this.output = "Storage cleared";
+    }
+
+    async keys(){
+      const keys = await this.storageService.keys();
+      this.output = "Keys are " + keys.toString();  
+    }
+
+    async length(){
+      const length = await this.storageService.length();
+      this.output = length.toString();
+    }
+
+    async iterate(){
+      await this.storageService.forEach((value, key, iterationNumber) => {
+        this.output = `Key: ${key}, Value: ${value}, Iteration: ${iterationNumber}`;
+      });
+    }
 
   async setItem() {
     try {
@@ -40,3 +69,4 @@ export class HomePage {
     }
   }
 }
+
