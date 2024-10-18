@@ -20,13 +20,19 @@
     @for (movie of movies; track movie; let i = $index) {
       <ion-item-sliding>
         <ion-item>
-          <ion-label>
+          <ion-label *ngIf="!isEditing">
             <h2>{{ movie.name }}</h2>
             <p>{{ movie.year }}</p>
           </ion-label>
+          <ion-item *ngIf="isEditing">
+            <ion-input [(ngModel)]="movie.name"></ion-input>
+            <p>{{ movie.year }}</p>
+          </ion-item>
         </ion-item>
         <ion-item-options side="end">
           <ion-item-option color="danger" (click)="deleteMovie(i)">Delete</ion-item-option>
+          <ion-item-option expand="block" color="secondary" *ngIf="!isEditing" (click)="editing()">Edit</ion-item-option>
+          <ion-item-option expand="block" color="success" *ngIf="isEditing" (click)="editName(i, movie.name)">Save</ion-item-option>
         </ion-item-options>
       </ion-item-sliding>
     }

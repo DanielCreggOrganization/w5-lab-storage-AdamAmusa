@@ -17,11 +17,30 @@ export class MoviesPage implements OnInit {
   releaseYear: string = '';
   movies: { name: string; year: string }[] = [];
   errorMessage: string = '';
+  isEditing: boolean = false;
 
   constructor(private storageService: StorageService) {}
 
   async ngOnInit() {
     await this.loadMovies();
+  }
+
+  editing(){
+    this.isEditing = true;
+    console.log("Pressed edit button");
+  }
+
+
+  async editName(index: number, newName: string) {
+    this.movies[index].name = newName;//change name of movie at the index location
+    try {
+      await this.storageService.set('movies', this.movies);//override the movies array with the new name
+      this.errorMessage = '';
+    } catch (error) {
+      console.error('Error editing movie name:', error);
+      this.errorMessage = 'Error editing movie name. Please try again.';
+    }
+    this.isEditing = false;
   }
 
   async addMovie() {
